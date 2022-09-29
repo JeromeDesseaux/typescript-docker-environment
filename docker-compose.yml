@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  server:
+    build: 
+      context: ./src
+      dockerfile: dockerfiles/Dockerfile.dev
+    restart: always
+    ports: 
+      - 8080:8080
+    volumes:
+      - ./src:/app
+      # - modules:/app/node_modules/
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: "redis:alpine"
+    restart: always
+    ports:
+      - 6379:6379
+
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=myproject
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+  
+volumes:
+  # modules:
+  db:
+    driver: local
