@@ -8,7 +8,7 @@ services:
       dockerfile: docker/Dockerfile
     restart: always
     ports: 
-      - 8080:8080
+      - ${SERVER_PORT:-8080}:8080
     volumes:
       - ./src:/app
       # - server_node_modules:/app/node_modules/
@@ -20,17 +20,17 @@ services:
     image: "redis:alpine"
     restart: always
     ports:
-      - 6379:6379
+      - ${REDIS_DB_PORT:-6379}:6379
 
   db:
     image: postgres:alpine
     restart: always
     environment:
-      - POSTGRES_DB=myproject
-      - POSTGRES_USER=username
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${POSTGRES_DB_NAME:-myproject}
+      - POSTGRES_USER=${POSTGRES_DB_USER:-username}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD:-password}
     ports:
-      - 5432:5432
+      - ${POSTGRES_DB_PORT:-5432}:5432
     volumes:
       - db:/var/lib/postgresql/data
   
